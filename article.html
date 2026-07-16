@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Article | ArticleInsight</title><meta name="description" content="Read this article on ArticleInsight."><link rel="stylesheet" href="assets/style.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script></head><body><nav class="nav"><div class="container navin glass"><a class="brand" href="index.html">Article<span>Insight</span></a><div class="navlinks"><a href="index.html">Home</a><a href="index.html#articles">Articles</a><a href="submit.html">Submit Article</a><a href="dashboard.html">Dashboard</a><a href="login.html" id="authLink" class="btn btn-primary">Login</a></div><a href="submit.html" class="btn btn-primary mobile">Submit</a></div></nav><main class="container article-shell" id="article"><div class="empty">Loading article...</div></main><footer class="footer">© 2026 ArticleInsight</footer><script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCwZQI1fDJJ88coWxoaWOQy8sSeV7PMl8U",
+  authDomain: "articleinsight-e4f09.firebaseapp.com",
+  projectId: "articleinsight-e4f09",
+  storageBucket: "articleinsight-e4f09.firebasestorage.app",
+  messagingSenderId: "109524893167",
+  appId: "1:109524893167:web:e1999864cd80df181fca1a",
+  measurementId: "G-099HTD2YK4"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function sanitize(html){const t=document.createElement('template');t.innerHTML=html;[...t.content.querySelectorAll('script,iframe,object,embed,form,input,button')].forEach(n=>n.remove());[...t.content.querySelectorAll('*')].forEach(el=>[...el.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))el.removeAttribute(a.name)}));return t.innerHTML}const id=new URLSearchParams(location.search).get('id');if(!id)document.getElementById('article').innerHTML='<div class="empty">Article not found.</div>';else db.collection('articles').doc(id).get().then(d=>{if(!d.exists||d.data().status!=='published')throw 0;const p=d.data();document.title=p.title+' | ArticleInsight';document.querySelector('meta[name="description"]').content=p.excerpt||'Read this article on ArticleInsight.';document.getElementById('article').innerHTML=`<header class="article-head glass"><div class="tag">${esc(p.category)}</div><h1>${esc(p.title)}</h1><p class="muted">By ${esc(p.authorName)} · ${p.createdAt?.toDate?p.createdAt.toDate().toLocaleDateString():''}</p></header>${p.imageUrl?`<img class="article-image" src="${esc(p.imageUrl)}" alt="${esc(p.title)}">`:''}<article class="article-body">${sanitize(p.content)}</article>`}).catch(()=>document.getElementById('article').innerHTML='<div class="empty">This article is unavailable or has not been published.</div>')
+</script></body></html>
